@@ -9,8 +9,7 @@ if [[ $1 == "--type" ]]; then
 fi
 
 prefix=${PASSWORD_STORE_DIR-~/.password-store}
-password_files=$(find $prefix -iname "*.gpg" | grep -v ".git" | sed 's/.*\.password-store\/\(.*\)\.gpg/\1/')
-password=$(printf '%s\n' "${password_files[@]}" | dmenu -i "$@")
+password=$(cd $prefix && find * -type f -iname "*.gpg" -exec sh -c 'printf "%s\n" "${@%.gpg}"' _ {} + | dmenu -i "$@")
 
 [[ -n $password ]] || exit
 
